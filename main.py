@@ -61,7 +61,9 @@ class MyWindow(QtWidgets.QMainWindow):
 
         recursiveSetChildFocusPolicy(self)
 
-app=QtWidgets.QApplication([])
-application=MyWindow()
-application.show()
-sys.exit(app.exec())
+
+if __name__ == "__main__":
+    app=QtWidgets.QApplication([])
+    application=MyWindow()
+    application.show()
+    sys.exit(app.exec())
