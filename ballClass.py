@@ -10,6 +10,7 @@ class Ball():
         x = X
         y = Y
         self.listTrack = [[x,y] for i in range(100)]
+        self.active = True
         self.projectionSpeed()
 
     def projectionSpeed(self):
@@ -29,8 +30,6 @@ class Ball():
         if self.f == 0 or self.f == 180:
             self.newY = 0
 
-        print('SPEED = ',math.sqrt(self.newX**2 + self.newY**2) ,' pi/10mc')
-
     def updateTrack(self):
         oldTrack =  self.listTrack
         self.listTrack = []
@@ -41,6 +40,19 @@ class Ball():
         self.listTrack.append(coord)
         for i in range(len(oldTrack) - 1):
             self.listTrack.append(oldTrack[i])
+
+    def checkMin(self):
+        if self.speedBall() <= 0.05 :
+            self.newX = 0
+            self.newY = 0
+            self.active = False
+        else:
+            self.active = True
+    
+    def speedBall(self):
+        speed = math.sqrt(self.newX ** 2 + self.newY ** 2)
+        speed = float('{:.2f}'.format(speed))
+        return speed
 
 if __name__ == "__main__":
     print('Module for Ball Simutator')
