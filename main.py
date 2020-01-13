@@ -39,7 +39,7 @@ class MyWindow(QtWidgets.QMainWindow):
         
         self.setChildrenFocusPolicy(QtCore.Qt.NoFocus)
         self.ui.frame.setGeometry(QtCore.QRect(25, 25, 850, 850))
-        self.ui.frameRight.setGeometry(QtCore.QRect(875, 25, 600, 400))
+        self.ui.frameRight.setGeometry(QtCore.QRect(875, 25, 600, 850))
 
         self.ui.sld.valueChanged.connect(self.setStartSpeed)
         self.ui.sld_grav.valueChanged.connect(self.setGravity)
@@ -51,18 +51,43 @@ class MyWindow(QtWidgets.QMainWindow):
     
     def setStyleProgramm(self):
         self.ui.frame.setStyleSheet('background-color: rgb(50,50,50)')
-        self.ui.lb_red.setStyleSheet('color: rgb(170,0,0)')
-        self.ui.lb_green.setStyleSheet('color: rgb(0,170,0)')
-        self.ui.lb_blue.setStyleSheet('color: rgb(0,0,170)')
-        self.ui.lb_dark.setStyleSheet('color: rgb(0,0,0)')
+
+        self.ui.lb_red.setStyleSheet('color: rgb(170,0,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
+        self.ui.lb_green.setStyleSheet('color: rgb(0,170,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
+        self.ui.lb_blue.setStyleSheet('color: rgb(0,0,170);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
+        self.ui.lb_dark.setStyleSheet('color: rgb(0,0,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
+        self.ui.lb_red.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_blue.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_green.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_dark.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_red.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_green.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_blue.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_dark.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+
+        self.ui.lb_border.setStyleSheet(
+            'border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
+        self.ui.lb_border.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_border.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_border1.setStyleSheet('border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
         self.ui.lb_border1.setFont(QtGui.QFont('Lucida Bright', 10))
         self.ui.lb_border1.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
         self.ui.lb_border2.setFont(QtGui.QFont('Lucida Bright', 10))
+        self.ui.lb_border2.setStyleSheet('border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
         self.ui.lb_border2.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_reload.setStyleSheet(
+            'border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
+        self.ui.lb_reload.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+        self.ui.lb_reload.setFont(QtGui.QFont('Lucida Bright', 10))
         self.ui.frameRight.setStyleSheet('background-color: rgb(200,200,200)')
+
+        self.ui.lb_angle.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
+
+
         
     def setStartSpeed(self,speed):
-        self.ui.frame.startSpeed = speed / 2
+        self.ui.frame.startSpeed = speed / 3
+        self.ui.frame.startSpeed = float('{:.1f}'.format(self.ui.frame.startSpeed))
         self.setTextParameters()
 
     def setLoss(self,loss):
@@ -78,12 +103,11 @@ class MyWindow(QtWidgets.QMainWindow):
     def angleDialog(self):
         f,ok=QtWidgets.QInputDialog.getText(self,
                                     'Choise angle',"Enter start degrees from 0 (to rigth) to 360")
-
         if ok:
             try:
-                self.ui.frame.startF = int(f)
+                self.ui.frame.startF = float(f)
             except ValueError:
-                self.ui.frame.startF = 0
+                pass
         self.setTextParameters()
             
     def setTextParameters(self):

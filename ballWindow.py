@@ -16,6 +16,7 @@ class Ui_MainWindow(object):
         self.frame.setObjectName("frame")
         
         self.frameRight = QtWidgets.QFrame(self.centralwidget)
+        self.lb_border = QtWidgets.QLabel('Current speed of balls')
         self.sld = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.sld_grav = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.sld_loss = QtWidgets.QSlider(QtCore.Qt.Horizontal)
@@ -29,6 +30,7 @@ class Ui_MainWindow(object):
         self.lb_border2 = QtWidgets.QLabel('Current parameters of environment')
         self.lb_grav = QtWidgets.QLabel()
         self.lb_loss = QtWidgets.QLabel()
+        self.lb_reload = QtWidgets.QLabel('Press "Space" for reload!')
 
 
         self.bt_angle = QtWidgets.QPushButton('Choice angle')
@@ -56,6 +58,7 @@ class Ui_MainWindow(object):
 
         self.vbox = QtWidgets.QVBoxLayout(self.frameRight)
         self.vbox.setSpacing(5)
+        self.vbox.addWidget(self.lb_border)
         self.vbox.addLayout(self.hbox_up)
         self.vbox.addLayout(self.hbox_down)
         self.vbox.addWidget(self.lb_border1)
@@ -64,6 +67,7 @@ class Ui_MainWindow(object):
         self.vbox.addWidget(self.lb_border2)
         self.vbox.addLayout(self.hbox_grav)
         self.vbox.addLayout(self.hbox_loss)
+        self.vbox.addWidget(self.lb_reload)
 
 
         MainWindow.setCentralWidget(self.centralwidget)

@@ -68,10 +68,11 @@ class PaintBall(QtWidgets.QFrame):
                 self.size().height()
 
             if  self.listBall[0].coords[1] + self.listBall[0].radius[1] * math.cos(PaintBall.RAD_60) > Y1 :
-                self.listBall[0].coords[1] += Y1 - (self.listBall[0].coords[1] + self.listBall[0].radius[1] * math.cos(PaintBall.RAD_60))
-                #self.listBall[0].coords[0] -= self.listBall[0].newX
+                self.listBall[0].coords[1] -= self.listBall[0].newY
+                self.listBall[0].coords[0] -= self.listBall[0].newX
                 a = -60
                 self.changeDirection(a,self.listBall[0])
+
 
 
             # Point of intersection with -60 degrees border down for second ball
@@ -80,8 +81,8 @@ class PaintBall(QtWidgets.QFrame):
                  self.size().height()
 
             if  self.listBall[1].coords[1] - self.listBall[1].radius[1] * math.cos(PaintBall.RAD_60) < Y2 :
-                self.listBall[1].coords[1] += Y2 - (self.listBall[1].coords[1] - self.listBall[1].radius[1] * math.cos(PaintBall.RAD_60))
-                #self.listBall[1].coords[0] -= self.listBall[1].newX
+                self.listBall[1].coords[1] -= self.listBall[1].newY
+                self.listBall[1].coords[0] -= self.listBall[1].newX
                 a = -60
                 self.changeDirection(a,self.listBall[1])
 
@@ -91,8 +92,8 @@ class PaintBall(QtWidgets.QFrame):
                  self.size().height()
 
             if  self.listBall[1].coords[1] + self.listBall[1].radius[1] * math.cos(PaintBall.RAD_45) > Y2 :
-                self.listBall[1].coords[1] += Y2 - (self.listBall[1].coords[1] + self.listBall[1].radius[1] * math.cos(PaintBall.RAD_45))
-                #self.listBall[1].coords[0] -= self.listBall[1].newX
+                self.listBall[1].coords[1] -= self.listBall[1].newY
+                self.listBall[1].coords[0] -= self.listBall[1].newX
                 a = -45
                 self.changeDirection(a,self.listBall[1])
 
@@ -102,8 +103,8 @@ class PaintBall(QtWidgets.QFrame):
                  self.size().height()
 
             if self.listBall[2].coords[1] - self.listBall[2].radius[1] * math.cos(PaintBall.RAD_45) < Y3:
-                 self.listBall[2].coords[1] += Y3 - (self.listBall[2].coords[1] - self.listBall[2].radius[1] * math.cos(PaintBall.RAD_45))
-                 #self.listBall[2].coords[0] -= self.listBall[2].newX
+                 self.listBall[2].coords[1] -= self.listBall[2].newY
+                 self.listBall[2].coords[0] -= self.listBall[2].newX
                  a = -45
                  self.changeDirection(a, self.listBall[2])
             # Point of intersection with -30 degrees border up for third ball
@@ -112,8 +113,8 @@ class PaintBall(QtWidgets.QFrame):
                  self.size().height()
 
             if self.listBall[2].coords[1] + self.listBall[2].radius[1] * math.cos(PaintBall.RAD_30) > Y3:
-                 self.listBall[2].coords[1] += Y3 - (self.listBall[2].coords[1] + self.listBall[2].radius[1] * math.cos(PaintBall.RAD_30))
-                 #self.listBall[2].coords[0] -= self.listBall[2].newX
+                 self.listBall[2].coords[1] -= self.listBall[2].newY
+                 self.listBall[2].coords[0] -= self.listBall[2].newX
                  a = -30
                  self.changeDirection(a, self.listBall[2])
 
@@ -123,8 +124,8 @@ class PaintBall(QtWidgets.QFrame):
                  self.size().height()
 
             if self.listBall[3].coords[1] - self.listBall[3].radius[1] * math.cos(PaintBall.RAD_30) < Y4:
-                 self.listBall[3].coords[1] += Y4 - (self.listBall[3].coords[1] - self.listBall[3].radius[1] * math.cos(PaintBall.RAD_30))
-                 #self.listBall[3].coords[0] -= self.listBall[3].newX
+                 self.listBall[3].coords[1] -= self.listBall[3].newY
+                 self.listBall[3].coords[0] -= self.listBall[3].newX
                  a = -30
                  self.changeDirection(a, self.listBall[3])
 
