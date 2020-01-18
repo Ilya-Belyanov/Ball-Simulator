@@ -9,26 +9,26 @@ class Ball():
         self.f = f
         x = X
         y = Y
-        self.listTrack = [[x,y] for i in range(100)]
+        self.listTrack = [[x,y] for i in range(60)]
         self.active = True
         self.projectionSpeed()
 
     def projectionSpeed(self):
         '''Count projection of speed on X and Y axis'''
         self.angle = (self.f * math.pi) / 180
-        self.tg = math.sin(self.angle) / math.cos(self.angle)
+        self.tg = math.tan(self.angle)
 
-        self.newX = self.speed /  math.sqrt(1 + self.tg ** 2)
+        self.newX =  self.speed /  math.sqrt(1 + self.tg ** 2)
         self.newY =  abs(self.tg) * self.newX
-        if math.cos(self.angle)< 0:
-            self.newX = - self.newX
-        if math.sin(self.angle) < 0:
-            self.newY = - self.newY
-        if self.f == 90 or self.f == 270:
-            self.newX = 0
 
-        if self.f == 0 or self.f == 180:
-            self.newY = 0
+        self.newX = float('{:.2f}'.format(self.newX))
+        self.newY = float('{:.2f}'.format(self.newY))
+
+        if math.cos(self.angle)< 0:
+           self.newX = - self.newX
+        if math.sin(self.angle) < 0:
+           self.newY = - self.newY
+
 
     def updateTrack(self):
         oldTrack =  self.listTrack

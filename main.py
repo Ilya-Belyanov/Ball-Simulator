@@ -31,7 +31,7 @@ class MyWindow(QtWidgets.QMainWindow):
         '''Create main Window'''
         super(MyWindow,self).__init__()
 
-        self.ui=Ui_MainWindow()
+        self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         self.timerMove = QtCore.QBasicTimer()
@@ -44,45 +44,16 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.sld.valueChanged.connect(self.setStartSpeed)
         self.ui.sld_grav.valueChanged.connect(self.setGravity)
         self.ui.sld_loss.valueChanged.connect(self.setLoss)
-        self.ui.bt_angle.clicked.connect(self.angleDialog)
+        self.ui.btAngle.clicked.connect(self.angleDialog)
 
         self.setTextParameters()
-        self.setStyleProgramm()
-    
-    def setStyleProgramm(self):
-        self.ui.frame.setStyleSheet('background-color: rgb(50,50,50)')
+        self.loadStyleSheets()
 
-        self.ui.lb_red.setStyleSheet('color: rgb(170,0,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
-        self.ui.lb_green.setStyleSheet('color: rgb(0,170,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
-        self.ui.lb_blue.setStyleSheet('color: rgb(0,0,170);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
-        self.ui.lb_dark.setStyleSheet('color: rgb(0,0,0);border-style: solid; border-width: 2px; border-color: rgb(150,150,150);')
-        self.ui.lb_red.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_blue.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_green.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_dark.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_red.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_green.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_blue.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_dark.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
 
-        self.ui.lb_border.setStyleSheet(
-            'border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
-        self.ui.lb_border.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_border.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_border1.setStyleSheet('border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
-        self.ui.lb_border1.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_border1.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_border2.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.lb_border2.setStyleSheet('border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
-        self.ui.lb_border2.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_reload.setStyleSheet(
-            'border-style: solid; border-width: 2px; border-color: rgb(100,100,100);background-color: rgb(150,150,150)')
-        self.ui.lb_reload.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-        self.ui.lb_reload.setFont(QtGui.QFont('Lucida Bright', 10))
-        self.ui.frameRight.setStyleSheet('background-color: rgb(200,200,200)')
-
-        self.ui.lb_angle.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignCenter)
-
+    def loadStyleSheets(self):
+        style = "static/style.css"
+        with open(style, "r") as f:
+            self.setStyleSheet(f.read())
 
         
     def setStartSpeed(self,speed):
@@ -101,7 +72,8 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setTextParameters()
     
     def angleDialog(self):
-        f,ok=QtWidgets.QInputDialog.getText(self,
+
+        f,ok = QtWidgets.QInputDialog.getText(self,
                                     'Choise angle',"Enter start degrees from 0 (to rigth) to 360")
         if ok:
             try:
@@ -111,16 +83,16 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setTextParameters()
             
     def setTextParameters(self):
-        self.ui.lb_speed.setText('Start speed = ' + str(self.ui.frame.startSpeed) + ' pi/10ms')
-        self.ui.lb_grav.setText('Gravity = ' + str(self.ui.frame.gravity) + ' pi/10ms')
+        self.ui.lb_speed.setText('Start speed = ' + str(int(self.ui.frame.startSpeed*100)) + ' pxl/sec')
+        self.ui.lb_grav.setText('Gravity = ' + str(int(self.ui.frame.gravity*100)) + ' pxl/sec')
         self.ui.lb_angle.setText('Start angle = ' + str(self.ui.frame.startF) + ' degrees')
         self.ui.lb_loss.setText('Loss of energy = ' + str(int(self.ui.frame.loss * 100)) + ' %')
 
     def setTextSpeed(self):
-        self.ui.lb_red.setText('SpeedRed = ' + str(self.ui.frame.listBall[0].speedBall()) + ' pi/10ms')
-        self.ui.lb_green.setText('SpeedGreen = ' + str(self.ui.frame.listBall[1].speedBall()) + ' pi/10ms')
-        self.ui.lb_blue.setText('SpeedBlue = ' + str(self.ui.frame.listBall[2].speedBall()) + ' pi/10ms')
-        self.ui.lb_dark.setText('SpeedDark = ' + str(self.ui.frame.listBall[3].speedBall()) + ' pi/10ms')
+        self.ui.lb_red.setText('SpeedRed = ' + str(int(self.ui.frame.listBall[0].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_green.setText('SpeedGreen = ' + str(int(self.ui.frame.listBall[1].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_yellow.setText('SpeedBlue = ' + str(int(self.ui.frame.listBall[2].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_purple.setText('SpeedPink = ' + str(int(self.ui.frame.listBall[3].speedBall()*100)) + ' pxl/sec')
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():

@@ -16,24 +16,34 @@ class Ui_MainWindow(object):
         self.frame.setObjectName("frame")
         
         self.frameRight = QtWidgets.QFrame(self.centralwidget)
+
         self.lb_border = QtWidgets.QLabel('Current speed of balls')
+        self.lb_border.setObjectName("lb_border")
         self.sld = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.sld_grav = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.sld_loss = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.lb_red = QtWidgets.QLabel()
+        self.lb_red.setObjectName("lb_red")
         self.lb_green = QtWidgets.QLabel()
-        self.lb_blue = QtWidgets.QLabel()
-        self.lb_dark = QtWidgets.QLabel()
+        self.lb_green.setObjectName("lb_green")
+        self.lb_yellow = QtWidgets.QLabel()
+        self.lb_yellow.setObjectName("lb_yellow")
+        self.lb_purple = QtWidgets.QLabel()
+        self.lb_purple.setObjectName("lb_purple")
         self.lb_border1 = QtWidgets.QLabel('Start parameters of balls')
+        self.lb_border1.setObjectName("lb_border")
         self.lb_speed = QtWidgets.QLabel()
         self.lb_angle = QtWidgets.QLabel()
         self.lb_border2 = QtWidgets.QLabel('Current parameters of environment')
+        self.lb_border2.setObjectName("lb_border")
         self.lb_grav = QtWidgets.QLabel()
         self.lb_loss = QtWidgets.QLabel()
         self.lb_reload = QtWidgets.QLabel('Press "Space" for reload!')
+        self.lb_reload.setObjectName("lb_border")
 
 
-        self.bt_angle = QtWidgets.QPushButton('Choice angle')
+        self.btAngle = QtWidgets.QPushButton('Choice angle')
+        self.btAngle.setObjectName("btAngle")
         
         
         self.hbox_up = QtWidgets.QHBoxLayout()
@@ -45,11 +55,11 @@ class Ui_MainWindow(object):
         
         self.hbox_up.addWidget(self.lb_red)
         self.hbox_up.addWidget(self.lb_green)
-        self.hbox_down.addWidget(self.lb_blue)
-        self.hbox_down.addWidget(self.lb_dark)
+        self.hbox_down.addWidget(self.lb_yellow)
+        self.hbox_down.addWidget(self.lb_purple)
         self.hbox_speed.addWidget(self.sld)
         self.hbox_speed.addWidget(self.lb_speed)
-        self.hbox_angle.addWidget(self.bt_angle)
+        self.hbox_angle.addWidget(self.btAngle)
         self.hbox_angle.addWidget(self.lb_angle)
         self.hbox_grav.addWidget(self.sld_grav)
         self.hbox_grav.addWidget(self.lb_grav)
@@ -82,10 +92,15 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+        #self.loadStyleSheets()
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Ball Simulation"))
+
+    def loadStyleSheets(self):
+        style = "static/style.css"
+        with open(style, "r") as f:
+            self.frameRight.setStyleSheet(f.read())
 
 if __name__ == "__main__":
     print('Module for Ball Simutator')

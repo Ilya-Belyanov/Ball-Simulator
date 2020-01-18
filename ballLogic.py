@@ -24,7 +24,7 @@ class PaintBall(QtWidgets.QFrame):
         speed = self.startSpeed # pi/10 мс
         radius = ((10,10),(5,5),(10,10),(30,30))
         coords = ((100,500),(600,100),(600,400),(660,600))
-        colors = ((255,0,0,255),(0,255,0,255),(0,0,255,255),(0,0,0,255))
+        colors = ((255,0,0,255),(0,255,0,255),(242,245,26,255),(190,0,255,255))
         f = self.startF
         for i in range(self.countBall):
             R1 = radius[i][0]
@@ -53,7 +53,7 @@ class PaintBall(QtWidgets.QFrame):
                     #a = 0
                     #self.changeDirection(a,ball)
 
-                elif ball.coords[0] < ball.radius[0] or ball.coords[0] > self.size().width() - ball.radius[0]:
+                if ball.coords[0] < ball.radius[0] or ball.coords[0] > self.size().width() - ball.radius[0]:
                     ball.coords[1] -= ball.newY
                     ball.coords[0] -= ball.newX
                     # Simplification of calculations
@@ -62,79 +62,33 @@ class PaintBall(QtWidgets.QFrame):
                     #a = 90
                     #self.changeDirection(a,ball)
 
+            self.checkLimitLine(self.listBall[0],PaintBall.RAD_60,1,-60)
 
-            # Point of intersection with -60 degrees border up for first ball
-            Y1 = - (math.tan(PaintBall.RAD_60)) * (self.listBall[0].coords[0] + self.listBall[0].radius[0] * math.cos(PaintBall.RAD_30)) + \
-                self.size().height()
+            self.checkLimitLine(self.listBall[1], PaintBall.RAD_60, -1, -60)
+            self.checkLimitLine(self.listBall[1], PaintBall.RAD_45, 1, -45)
 
-            if  self.listBall[0].coords[1] + self.listBall[0].radius[1] * math.cos(PaintBall.RAD_60) > Y1 :
-                self.listBall[0].coords[1] -= self.listBall[0].newY
-                self.listBall[0].coords[0] -= self.listBall[0].newX
-                a = -60
-                self.changeDirection(a,self.listBall[0])
+            self.checkLimitLine(self.listBall[2], PaintBall.RAD_45, -1, -45)
+            self.checkLimitLine(self.listBall[2], PaintBall.RAD_30, 1, -30)
 
-
-
-            # Point of intersection with -60 degrees border down for second ball
-            Y2 = - (math.tan(PaintBall.RAD_60)) * (
-                        self.listBall[1].coords[0] - self.listBall[1].radius[0] * math.cos(PaintBall.RAD_30)) + \
-                 self.size().height()
-
-            if  self.listBall[1].coords[1] - self.listBall[1].radius[1] * math.cos(PaintBall.RAD_60) < Y2 :
-                self.listBall[1].coords[1] -= self.listBall[1].newY
-                self.listBall[1].coords[0] -= self.listBall[1].newX
-                a = -60
-                self.changeDirection(a,self.listBall[1])
-
-            # Point of intersection with -45 degrees border up for second ball
-            Y2 = - (math.tan(PaintBall.RAD_45)) * (
-                        self.listBall[1].coords[0] + self.listBall[1].radius[0] * math.cos(PaintBall.RAD_45)) + \
-                 self.size().height()
-
-            if  self.listBall[1].coords[1] + self.listBall[1].radius[1] * math.cos(PaintBall.RAD_45) > Y2 :
-                self.listBall[1].coords[1] -= self.listBall[1].newY
-                self.listBall[1].coords[0] -= self.listBall[1].newX
-                a = -45
-                self.changeDirection(a,self.listBall[1])
-
-            # Point of intersection with -45 degrees border down for third ball
-            Y3 = - (math.tan(PaintBall.RAD_45)) * (
-                        self.listBall[2].coords[0] - self.listBall[2].radius[0] * math.cos(PaintBall.RAD_45)) + \
-                 self.size().height()
-
-            if self.listBall[2].coords[1] - self.listBall[2].radius[1] * math.cos(PaintBall.RAD_45) < Y3:
-                 self.listBall[2].coords[1] -= self.listBall[2].newY
-                 self.listBall[2].coords[0] -= self.listBall[2].newX
-                 a = -45
-                 self.changeDirection(a, self.listBall[2])
-            # Point of intersection with -30 degrees border up for third ball
-            Y3 = - (math.tan(PaintBall.RAD_30)) * (
-                        self.listBall[2].coords[0] + self.listBall[2].radius[0] * math.cos(PaintBall.RAD_60)) + \
-                 self.size().height()
-
-            if self.listBall[2].coords[1] + self.listBall[2].radius[1] * math.cos(PaintBall.RAD_30) > Y3:
-                 self.listBall[2].coords[1] -= self.listBall[2].newY
-                 self.listBall[2].coords[0] -= self.listBall[2].newX
-                 a = -30
-                 self.changeDirection(a, self.listBall[2])
-
-            # Point of intersection with -30 degrees border down for fourth ball
-            Y4 = - (math.tan(PaintBall.RAD_30)) * (
-                    self.listBall[3].coords[0] - self.listBall[3].radius[0] * math.cos(PaintBall.RAD_60)) + \
-                 self.size().height()
-
-            if self.listBall[3].coords[1] - self.listBall[3].radius[1] * math.cos(PaintBall.RAD_30) < Y4:
-                 self.listBall[3].coords[1] -= self.listBall[3].newY
-                 self.listBall[3].coords[0] -= self.listBall[3].newX
-                 a = -30
-                 self.changeDirection(a, self.listBall[3])
+            self.checkLimitLine(self.listBall[3], PaintBall.RAD_30, -1, -30)
 
             for ball in self.listBall:
-                
+
                 ball.updateTrack()
                 ball.newY -= self.gravity
 
+    def checkLimitLine(self,ball,RAD,position,f):
+        # Point of intersection with f degrees border up or down for balls
+        # if position == 1 -> border is up , else position == -1 and border is down
+        Y = - (math.tan(RAD)) * (
+                ball.coords[0] +  position * ball.radius[0] * math.cos(RAD)) + \
+             self.size().height()
 
+
+        if position * (ball.coords[1] + position * ball.radius[1] * math.cos(RAD)) > (position * Y):
+            ball.coords[1] -=  ball.newY
+            ball.coords[0] -=  ball.newX
+            self.changeDirection(f,  ball)
 
     def changeDirection(self,a,ball):
         angle = (a * math.pi) / 180
@@ -161,10 +115,6 @@ class PaintBall(QtWidgets.QFrame):
         ball.newX = Xdop1 + Xdop2
         ball.newY = Ydop1 + Ydop2
 
-
-        if ball == self.listBall[2]:
-            #print('X до ', self.listBall[2].newX, ' Y до ', self.listBall[2].newY)
-            pass
         self.changeSpeed(ball)
 
     def changeSpeed(self,ball):
@@ -194,7 +144,7 @@ class PaintBall(QtWidgets.QFrame):
                 qp.drawEllipse(ball.coords[0] - ball.radius[0],self.size().height() - ball.coords[1] - ball.radius[1], ball.radius[0]*2, ball.radius[1]*2)
 
     def drawLimitLine(self,qp,event):
-        color = QtGui.QColor.fromRgb(100, 100, 100, 255)
+        color = QtGui.QColor.fromRgb(60,213,200, 255)
         pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
         qp.setPen(pen)
 
@@ -209,8 +159,6 @@ class PaintBall(QtWidgets.QFrame):
             qp.drawText(event.rect(),QtCore.Qt.AlignCenter,'Press Space')
 
 
-        qp.setBrush(QtGui.QColor.fromRgb(0,0,0,0))
-        qp.drawRect(0,0,self.size().width() -1,self.size().height()-1)
         # -45 degress
         qp.drawLine(0, 0,self.size().width(),self.size().height())
         # -60 degress
