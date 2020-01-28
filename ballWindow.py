@@ -2,11 +2,10 @@ from PyQt5 import QtCore, QtWidgets
 from ballLogic import PaintBall
 
 class Ui_MainWindow(object):
-
     def setupUi(self, MainWindow):
         '''Create central Window'''
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setFixedSize(1500, 900)
+        MainWindow.setGeometry(QtCore.QRect(100, 100, 1375, 800))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -15,6 +14,20 @@ class Ui_MainWindow(object):
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
         
+        self.createFrameRight()
+        
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+    
+    def createFrameRight(self):
         self.frameRight = QtWidgets.QFrame(self.centralwidget)
 
         self.lb_border = QtWidgets.QLabel('Current speed of balls')
@@ -41,18 +54,16 @@ class Ui_MainWindow(object):
         self.lb_reload = QtWidgets.QLabel('Press "Space" for reload!')
         self.lb_reload.setObjectName("lb_border")
 
-
         self.btAngle = QtWidgets.QPushButton('Choice angle')
         self.btAngle.setObjectName("btAngle")
-        
-        
+
         self.hbox_up = QtWidgets.QHBoxLayout()
         self.hbox_down = QtWidgets.QHBoxLayout()
         self.hbox_speed = QtWidgets.QHBoxLayout()
         self.hbox_grav = QtWidgets.QHBoxLayout()
         self.hbox_loss = QtWidgets.QHBoxLayout()
         self.hbox_angle = QtWidgets.QHBoxLayout()
-        
+
         self.hbox_up.addWidget(self.lb_red)
         self.hbox_up.addWidget(self.lb_green)
         self.hbox_down.addWidget(self.lb_yellow)
@@ -78,29 +89,12 @@ class Ui_MainWindow(object):
         self.vbox.addLayout(self.hbox_grav)
         self.vbox.addLayout(self.hbox_loss)
         self.vbox.addWidget(self.lb_reload)
-
-
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(MainWindow)
-
-
-        self.menubar.setObjectName("menubar")
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        #self.loadStyleSheets()
+        
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Ball Simulation"))
 
-    def loadStyleSheets(self):
-        style = "static/style.css"
-        with open(style, "r") as f:
-            self.frameRight.setStyleSheet(f.read())
+
 
 if __name__ == "__main__":
     print('Module for Ball Simutator')

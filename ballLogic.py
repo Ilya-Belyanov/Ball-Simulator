@@ -3,13 +3,12 @@ from ballClass import Ball
 import random
 import math
 
-class PaintBall(QtWidgets.QFrame):
-    '''Window of drawing'''
+class Board():
     RAD_45 = 0.785
     RAD_60 = 1.047
     RAD_30 = 0.524
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self,size):
+        self.size = size
         self.existBall = False
         self.countBall = 4
         self.gravity = 0
@@ -23,7 +22,7 @@ class PaintBall(QtWidgets.QFrame):
         self.listBall = []
         speed = self.startSpeed # pi/10 мс
         radius = ((10,10),(5,5),(10,10),(30,30))
-        coords = ((100,500),(600,100),(600,400),(660,600))
+        coords = ((100,500),(600,100),(600,300),(660,600))
         colors = ((255,0,0,255),(0,255,0,255),(242,245,26,255),(190,0,255,255))
         f = self.startF
         for i in range(self.countBall):
@@ -49,18 +48,18 @@ class PaintBall(QtWidgets.QFrame):
                     ball.coords[0] -= ball.newX
                     # Simplification of calculations
                     ball.newY = - ball.newY
-                    self.changeSpeed(ball)
-                    #a = 0
-                    #self.changeDirection(a,ball)
+                    ball.lossSpeed(self.loss)
+                    #f = 0
+                    #ball.changeDirection(f, self.loss)
 
                 if ball.coords[0] < ball.radius[0] or ball.coords[0] > self.size().width() - ball.radius[0]:
                     ball.coords[1] -= ball.newY
                     ball.coords[0] -= ball.newX
                     # Simplification of calculations
                     ball.newX = - ball.newX
-                    self.changeSpeed(ball)
-                    #a = 90
-                    #self.changeDirection(a,ball)
+                    ball.lossSpeed(self.loss)
+                    #f = 90
+                    #ball.changeDirection(f, self.loss)
 
             self.checkLimitLine(self.listBall[0],PaintBall.RAD_60,1,-60)
 
@@ -73,7 +72,6 @@ class PaintBall(QtWidgets.QFrame):
             self.checkLimitLine(self.listBall[3], PaintBall.RAD_30, -1, -30)
 
             for ball in self.listBall:
-
                 ball.updateTrack()
                 ball.newY -= self.gravity
 
@@ -84,44 +82,19 @@ class PaintBall(QtWidgets.QFrame):
                 ball.coords[0] +  position * ball.radius[0] * math.cos(RAD)) + \
              self.size().height()
 
-
         if position * (ball.coords[1] + position * ball.radius[1] * math.cos(RAD)) > (position * Y):
             ball.coords[1] -=  ball.newY
             ball.coords[0] -=  ball.newX
-            self.changeDirection(f,  ball)
+            ball.changeDirection(f, self.loss)
 
-    def changeDirection(self,a,ball):
-        angle = (a * math.pi) / 180
+class PaintBall(QtWidgets.QFrame):
+    '''Window of drawing'''
+    RAD_45 = 0.785
+    RAD_60 = 1.047
+    RAD_30 = 0.524
 
-        Yfdop1 = ball.newX * math.sin(angle)
-        # Projection sign
-        Yfdop1 = - Yfdop1
-
-        Xf = ball.newX * math.cos(angle) + ball.newY * math.sin(angle)
-        Yf = Yfdop1 + ball.newY * math.cos(angle)
-
-        # Reflection
-        Yf = -Yf
-
-        Xdop1 = Xf * math.cos(angle)
-        Xdop2 = Yf * math.sin(angle)
-
-        Ydop1 = Xf * math.sin(angle)
-        Ydop2 = Yf * math.cos(angle)
-
-        # Projection sign
-        Xdop2 = -Xdop2
-
-        ball.newX = Xdop1 + Xdop2
-        ball.newY = Ydop1 + Ydop2
-
-        self.changeSpeed(ball)
-
-    def changeSpeed(self,ball):
-        '''Losses during scattering'''
-        ball.newX *= (1 - self.loss)
-        ball.newY *= (1 - self.loss)
-        ball.checkMin()
+    def createBoard(self):
+        self.board = Board(self.size)
         
     def paintEvent(self, event):
         ''' Draw all elements'''
@@ -129,13 +102,14 @@ class PaintBall(QtWidgets.QFrame):
         size = self.size()
         qp.begin(self)
         self.drawBall(qp)
-        self.drawLimitLine(qp,event)
+        self.drawLimitLine(qp)
+        self.drawSign(qp,event)
         self.drawTrackBalls(qp)
         qp.end()
 
     def drawBall(self,qp):
-        if self.existBall:
-            for ball in self.listBall:
+        if self.board.existBall:
+            for ball in self.board.listBall:
                 ballColor = ball.color
                 color = QtGui.QColor.fromRgb(ballColor[0], ballColor[1], ballColor[2], ballColor[3])
                 pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
@@ -143,22 +117,10 @@ class PaintBall(QtWidgets.QFrame):
                 qp.setBrush(color)
                 qp.drawEllipse(ball.coords[0] - ball.radius[0],self.size().height() - ball.coords[1] - ball.radius[1], ball.radius[0]*2, ball.radius[1]*2)
 
-    def drawLimitLine(self,qp,event):
-        color = QtGui.QColor.fromRgb(60,213,200, 255)
+    def drawLimitLine(self,qp):
+        color = QtGui.QColor.fromRgb(60, 213, 200, 255)
         pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
         qp.setPen(pen)
-
-        passive = 0
-
-        for ball in self.listBall:
-            if not ball.active:
-                passive +=1
-
-        if not self.existBall or passive == len(self.listBall) :
-            qp.setFont( QtGui.QFont('Decorative',100))
-            qp.drawText(event.rect(),QtCore.Qt.AlignCenter,'Press Space')
-
-
         # -45 degress
         qp.drawLine(0, 0,self.size().width(),self.size().height())
         # -60 degress
@@ -166,9 +128,23 @@ class PaintBall(QtWidgets.QFrame):
         # -30 degress
         qp.drawLine(0, 0, self.size().width(),self.size().height() - self.size().width() *(1 + math.tan(- PaintBall.RAD_30)))
 
+    def drawSign(self,qp,event):
+        color = QtGui.QColor.fromRgb(60, 213, 200, 255)
+        pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
+        qp.setPen(pen)
+
+        passive = 0
+        for ball in self.board.listBall:
+            if not ball.active:
+                passive += 1
+
+        if not self.board.existBall or passive == len(self.board.listBall):
+            qp.setFont(QtGui.QFont('Decorative', 80))
+            qp.drawText(event.rect(), QtCore.Qt.AlignCenter, 'Press Space')
+
     def drawTrackBalls(self,qp):
-        if self.existBall:
-            for ball in self.listBall:
+        if self.board.existBall:
+            for ball in self.board.listBall:
                 ballColor = ball.color
                 color = QtGui.QColor.fromRgb(ballColor[0], ballColor[1], ballColor[2], ballColor[3])
                 pen = QtGui.QPen(color, 2, QtCore.Qt.SolidLine)
