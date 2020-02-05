@@ -16,10 +16,10 @@ class Board():
         self.loss = float('{:.2f}'.format(self.loss))
         self.startF = 0
         self.startSpeed = 0
-        self.listBall = []
+        self.Balls = []
 
     def createBall(self):
-        self.listBall = []
+        self.Balls = []
         speed = self.startSpeed # pi/10 мс
         radius = ((10,10),(5,5),(10,10),(30,30))
         coords = ((100,500),(600,100),(600,300),(660,600))
@@ -31,49 +31,37 @@ class Board():
             x = coords[i][0]
             y = coords[i][1]
             color = colors[i]
-            # f = random.randint(0, 360)
             ball = Ball(x,y,f,R1,R2,speed,color)
-            self.listBall.append(ball)
+            self.Balls.append(ball)
 
         self.existBall = True
 
     def moveBall(self):
         if self.existBall:
-            for ball in self.listBall:
-                ball.coords[1] += ball.newY
-                ball.coords[0] += ball.newX
+            for ball in self.Balls:
+                ball.move(1)
 
                 if ball.coords[1] > self.size().height() - ball.radius[1] or ball.coords[1] < ball.radius[1]:
-                    ball.coords[1] -= ball.newY
-                    ball.coords[0] -= ball.newX
-                    # Simplification of calculations
-                    ball.newY = - ball.newY
-                    ball.lossSpeed(self.loss)
-                    #f = 0
-                    #ball.changeDirection(f, self.loss)
+                    ball.move(-1)
+                    ball.changeDirection(0, self.loss)
 
                 if ball.coords[0] < ball.radius[0] or ball.coords[0] > self.size().width() - ball.radius[0]:
-                    ball.coords[1] -= ball.newY
-                    ball.coords[0] -= ball.newX
-                    # Simplification of calculations
-                    ball.newX = - ball.newX
-                    ball.lossSpeed(self.loss)
-                    #f = 90
-                    #ball.changeDirection(f, self.loss)
+                    ball.move(-1)
+                    ball.changeDirection(90, self.loss)
 
-            self.checkLimitLine(self.listBall[0],PaintBall.RAD_60,1,-60)
+            self.checkLimitLine(self.Balls[0],PaintBall.RAD_60,1,-60)
 
-            self.checkLimitLine(self.listBall[1], PaintBall.RAD_60, -1, -60)
-            self.checkLimitLine(self.listBall[1], PaintBall.RAD_45, 1, -45)
+            self.checkLimitLine(self.Balls[1], PaintBall.RAD_60, -1, -60)
+            self.checkLimitLine(self.Balls[1], PaintBall.RAD_45, 1, -45)
 
-            self.checkLimitLine(self.listBall[2], PaintBall.RAD_45, -1, -45)
-            self.checkLimitLine(self.listBall[2], PaintBall.RAD_30, 1, -30)
+            self.checkLimitLine(self.Balls[2], PaintBall.RAD_45, -1, -45)
+            self.checkLimitLine(self.Balls[2], PaintBall.RAD_30, 1, -30)
 
-            self.checkLimitLine(self.listBall[3], PaintBall.RAD_30, -1, -30)
+            self.checkLimitLine(self.Balls[3], PaintBall.RAD_30, -1, -30)
 
-            for ball in self.listBall:
+            for ball in self.Balls:
                 ball.updateTrack()
-                ball.newY -= self.gravity
+                ball.deltaY -= self.gravity
 
     def checkLimitLine(self,ball,RAD,position,f):
         # Point of intersection with f degrees border up or down for balls
@@ -83,8 +71,7 @@ class Board():
              self.size().height()
 
         if position * (ball.coords[1] + position * ball.radius[1] * math.cos(RAD)) > (position * Y):
-            ball.coords[1] -=  ball.newY
-            ball.coords[0] -=  ball.newX
+            ball.move(-1)
             ball.changeDirection(f, self.loss)
 
 class PaintBall(QtWidgets.QFrame):
@@ -109,18 +96,15 @@ class PaintBall(QtWidgets.QFrame):
 
     def drawBall(self,qp):
         if self.board.existBall:
-            for ball in self.board.listBall:
-                ballColor = ball.color
-                color = QtGui.QColor.fromRgb(ballColor[0], ballColor[1], ballColor[2], ballColor[3])
-                pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
-                qp.setPen(pen)
-                qp.setBrush(color)
+            for ball in self.board.Balls:
+                color = ( ball.color[0],  ball.color[1],  ball.color[2],  ball.color[3])
+                self.setPencil(qp, color, 5)
+                qp.setBrush(QtGui.QColor.fromRgb(ball.color[0], ball.color[1],ball.color[2], ball.color[3]))
                 qp.drawEllipse(ball.coords[0] - ball.radius[0],self.size().height() - ball.coords[1] - ball.radius[1], ball.radius[0]*2, ball.radius[1]*2)
 
     def drawLimitLine(self,qp):
-        color = QtGui.QColor.fromRgb(60, 213, 200, 255)
-        pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
+        color = (60, 213, 200, 255)
+        self.setPencil(qp, color, 5)
         # -45 degress
         qp.drawLine(0, 0,self.size().width(),self.size().height())
         # -60 degress
@@ -129,32 +113,35 @@ class PaintBall(QtWidgets.QFrame):
         qp.drawLine(0, 0, self.size().width(),self.size().height() - self.size().width() *(1 + math.tan(- PaintBall.RAD_30)))
 
     def drawSign(self,qp,event):
-        color = QtGui.QColor.fromRgb(60, 213, 200, 255)
-        pen = QtGui.QPen(color, 5, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
-
+        color = (60, 213, 200, 255)
+        self.setPencil(qp,color,5)
         passive = 0
-        for ball in self.board.listBall:
+        for ball in self.board.Balls:
             if not ball.active:
                 passive += 1
 
-        if not self.board.existBall or passive == len(self.board.listBall):
+        if not self.board.existBall or passive == len(self.board.Balls):
             qp.setFont(QtGui.QFont('Decorative', 80))
             qp.drawText(event.rect(), QtCore.Qt.AlignCenter, 'Press Space')
 
     def drawTrackBalls(self,qp):
         if self.board.existBall:
-            for ball in self.board.listBall:
-                ballColor = ball.color
-                color = QtGui.QColor.fromRgb(ballColor[0], ballColor[1], ballColor[2], ballColor[3])
-                pen = QtGui.QPen(color, 2, QtCore.Qt.SolidLine)
-                qp.setPen(pen)
+            for ball in self.board.Balls:
+                color = (ball.color[0], ball.color[1], ball.color[2], ball.color[3])
+                self.setPencil(qp,color,2)
+
                 for i in range(len(ball.listTrack) - 1):
                     startX = ball.listTrack[i][0]
                     startY = ball.listTrack[i][1]
                     endX = ball.listTrack[i + 1][0]
                     endY = ball.listTrack[i + 1][1]
                     qp.drawLine(startX,self.size().height() - startY,endX,self.size().height() - endY)
+
+    def setPencil(self,qp,color,thickness):
+        color = QtGui.QColor.fromRgb(color[0], color[1], color[2], color[3])
+        pen = QtGui.QPen(color, thickness, QtCore.Qt.SolidLine)
+        qp.setPen(pen)
+
 
 if __name__ == "__main__":
     print('Module for Ball Simutator')

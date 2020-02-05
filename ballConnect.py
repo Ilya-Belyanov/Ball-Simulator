@@ -1,7 +1,6 @@
 from PyQt5 import  QtCore, QtGui, QtWidgets
 from ballWindow import Ui_MainWindow
 
-
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         '''Create main Window'''
@@ -65,10 +64,10 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.lb_loss.setText('Loss of energy = ' + str(int(self.ui.frame.board.loss * 100)) + ' %')
 
     def setTextSpeed(self):
-        self.ui.lb_red.setText('SpeedRed = ' + str(int(self.ui.frame.board.listBall[0].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_green.setText('SpeedGreen = ' + str(int(self.ui.frame.board.listBall[1].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_yellow.setText('SpeedYellow = ' + str(int(self.ui.frame.board.listBall[2].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_purple.setText('SpeedPink = ' + str(int(self.ui.frame.board.listBall[3].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_red.setText('SpeedRed = ' + str(int(self.ui.frame.board.Balls[0].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_green.setText('SpeedGreen = ' + str(int(self.ui.frame.board.Balls[1].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_yellow.setText('SpeedYellow = ' + str(int(self.ui.frame.board.Balls[2].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_purple.setText('SpeedPink = ' + str(int(self.ui.frame.board.Balls[3].speedBall()*100)) + ' pxl/sec')
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():

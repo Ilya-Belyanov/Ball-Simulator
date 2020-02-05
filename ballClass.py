@@ -13,29 +13,27 @@ class Ball():
 
     def projectionSpeed(self):
         '''Count projection of speed on X and Y axis'''
-        self.angle = (self.f * math.pi) / 180
+        self.angle = self.convertToRadian(self.f)
         self.tg = math.tan(self.angle)
 
-        self.newX =  self.speed /  math.sqrt(1 + self.tg ** 2)
-        self.newY =  abs(self.tg) * self.newX
+        self.deltaX =  self.speed /  math.sqrt(1 + self.tg ** 2)
+        self.deltaY =  abs(self.tg) * self.deltaX
 
-        self.newX = float('{:.2f}'.format(self.newX))
-        self.newY = float('{:.2f}'.format(self.newY))
+        self.deltaX = float('{:.2f}'.format(self.deltaX))
+        self.deltaY = float('{:.2f}'.format(self.deltaY))
 
-        if math.cos(self.angle)< 0:
-           self.newX = - self.newX
-        if math.sin(self.angle) < 0:
-           self.newY = - self.newY
+        self.deltaX = self.checkSign(math.cos(self.angle), self.deltaX)
+        self.deltaY = self.checkSign(math.sin(self.angle), self.deltaY)
 
     def changeDirection(self,a,loss):
-        angle = (a * math.pi) / 180
+        angle = self.convertToRadian(a)
 
-        Yfdop1 = self.newX * math.sin(angle)
+        Yfdop1 = self.deltaX * math.sin(angle)
         # Projection sign
         Yfdop1 = - Yfdop1
 
-        Xf = self.newX * math.cos(angle) + self.newY * math.sin(angle)
-        Yf = Yfdop1 + self.newY * math.cos(angle)
+        Xf = self.deltaX * math.cos(angle) + self.deltaY * math.sin(angle)
+        Yf = Yfdop1 + self.deltaY * math.cos(angle)
 
         # Reflection
         Yf = -Yf
@@ -49,21 +47,21 @@ class Ball():
         # Projection sign
         Xdop2 = -Xdop2
 
-        self.newX = Xdop1 + Xdop2
-        self.newY = Ydop1 + Ydop2
+        self.deltaX = Xdop1 + Xdop2
+        self.deltaY = Ydop1 + Ydop2
 
         self.lossSpeed(loss)
 
     def lossSpeed(self,loss):
         '''Losses during scattering'''
-        self.newX *= (1 - loss)
-        self.newY *= (1 - loss)
+        self.deltaX *= (1 - loss)
+        self.deltaY *= (1 - loss)
         self.checkMin()
 
     def checkMin(self):
         if self.speedBall() < 0.002 :
-            self.newX = 0
-            self.newY = 0
+            self.deltaX = 0
+            self.deltaY = 0
             self.active = False
         else:
             self.active = True
@@ -79,9 +77,25 @@ class Ball():
             self.listTrack.append(oldTrack[i])
 
     def speedBall(self):
-        speed = math.sqrt(self.newX ** 2 + self.newY ** 2)
+        speed = math.sqrt(self.deltaX ** 2 + self.deltaY ** 2)
         speed = float('{:.2f}'.format(speed))
         return speed
+
+    def move(self,direction):
+        self.coords[1] += self.deltaY * direction
+        self.coords[0] += self.deltaX * direction
+
+    @staticmethod
+    def convertToRadian(a):
+        return  (a * math.pi) / 180
+
+    @staticmethod
+    def checkSign(function,delta):
+        if function < 0:
+           return -delta
+        else:
+           return delta
+
 
 if __name__ == "__main__":
     print('Module for Ball Simutator')
