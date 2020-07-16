@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtWidgets
-from ballLogic import PaintBall
+
+from painter import PaintBoard
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -9,7 +11,7 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
-        self.frame = PaintBall(self.centralwidget)
+        self.frame = PaintBoard(self.centralwidget)
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")

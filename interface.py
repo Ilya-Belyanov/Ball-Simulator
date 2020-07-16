@@ -1,10 +1,12 @@
-from PyQt5 import  QtCore, QtGui, QtWidgets
-from ballWindow import Ui_MainWindow
+from PyQt5 import QtCore, QtWidgets
+
+from mainWindow import Ui_MainWindow
+from adapter import Adapter
+
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
-        '''Create main Window'''
-        super(MyWindow,self).__init__()
+        super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
@@ -13,13 +15,16 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.timerInfo = QtCore.QBasicTimer()
         self.timerInfo.start(100, self)
-        
+
         self.setChildrenFocusPolicy(QtCore.Qt.NoFocus)
+
         self.ui.frame.setGeometry(QtCore.QRect(25, 25, 750, 750))
-        self.ui.frame.createBoard()
+        self.adapter = Adapter(self.ui.frame)
+
         self.ui.frameRight.setGeometry(QtCore.QRect(775, 25, 600, 750))
 
         self.ui.sld.valueChanged.connect(self.setStartSpeed)
+        self.ui.sld.setRange(0, 20)
         self.ui.sld_grav.valueChanged.connect(self.setGravity)
         self.ui.sld_loss.valueChanged.connect(self.setLoss)
         self.ui.btAngle.clicked.connect(self.angleDialog)
@@ -31,43 +36,40 @@ class MyWindow(QtWidgets.QMainWindow):
         style = "static/style.css"
         with open(style, "r") as f:
             self.setStyleSheet(f.read())
-        
-    def setStartSpeed(self,speed):
-        self.ui.frame.board.startSpeed = speed / 3
-        self.ui.frame.board.startSpeed = float('{:.5f}'.format(self.ui.frame.board.startSpeed))
+
+    def setStartSpeed(self, speed):
+        self.adapter.setStartSpeed(speed)
         self.setTextParameters()
 
-    def setLoss(self,loss):
-        '''Set share of losse during scattering'''
-        self.ui.frame.board.loss = loss / 100
-        self.ui.frame.board.loss = float('{:.2f}'.format(self.ui.frame.board.loss))
+    def setLoss(self, loss):
+        self.adapter.setLoss(loss)
         self.setTextParameters()
 
-    def setGravity(self,gravity):
-        self.ui.frame.board.gravity = gravity / 100
+    def setGravity(self, gravity):
+        self.adapter.setGravity(gravity)
         self.setTextParameters()
-    
+
     def angleDialog(self):
-        f,ok = QtWidgets.QInputDialog.getText(self,
-                                    'Choise angle',"Enter start degrees from 0 (to rigth) to 360")
+        f, ok = QtWidgets.QInputDialog.getText(self,
+                                               'Choice angle', "Enter start degrees from 0 (to right) to 360")
         if ok:
-            try:
-                self.ui.frame.board.startF = float(f)
-            except ValueError:
-                pass
+            self.adapter.setStartAngle(f)
         self.setTextParameters()
-            
+
     def setTextParameters(self):
-        self.ui.lb_speed.setText('Start speed = ' + str(int(self.ui.frame.board.startSpeed*100)) + ' pxl/sec')
-        self.ui.lb_grav.setText('Gravity = ' + str(int(self.ui.frame.board.gravity*100)) + ' pxl/sec')
-        self.ui.lb_angle.setText('Start angle = ' + str(self.ui.frame.board.startF) + ' degrees')
-        self.ui.lb_loss.setText('Loss of energy = ' + str(int(self.ui.frame.board.loss * 100)) + ' %')
+        self.ui.lb_speed.setText('Start speed = ' + self.adapter.boardStartSpeedStr() + ' pxl/sec')
+        self.ui.lb_grav.setText('Gravity = ' + self.adapter.boardGravityStr() + ' pxl/sec')
+        self.ui.lb_angle.setText('Start angle = ' + self.adapter.boardStartAngleStr() + ' degrees')
+        self.ui.lb_loss.setText('Loss of energy = ' + self.adapter.boardLoseStrProc() + ' %')
 
     def setTextSpeed(self):
-        self.ui.lb_red.setText('SpeedRed = ' + str(int(self.ui.frame.board.Balls[0].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_green.setText('SpeedGreen = ' + str(int(self.ui.frame.board.Balls[1].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_yellow.setText('SpeedYellow = ' + str(int(self.ui.frame.board.Balls[2].speedBall()*100)) + ' pxl/sec')
-        self.ui.lb_purple.setText('SpeedPink = ' + str(int(self.ui.frame.board.Balls[3].speedBall()*100)) + ' pxl/sec')
+        self.ui.lb_red.setText('SpeedRed = ' + self.adapter.speedBallStr(0) + ' pxl/sec')
+        self.ui.lb_green.setText(
+            'SpeedGreen = ' + self.adapter.speedBallStr(1) + ' pxl/sec')
+        self.ui.lb_yellow.setText(
+            'SpeedYellow = ' + self.adapter.speedBallStr(2) + ' pxl/sec')
+        self.ui.lb_purple.setText(
+            'SpeedPink = ' + self.adapter.speedBallStr(3) + ' pxl/sec')
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():
@@ -84,9 +86,7 @@ class MyWindow(QtWidgets.QMainWindow):
             self.ui.frame.board.createBall()
             self.update()
 
-
     def setChildrenFocusPolicy(self, policy):
-        '''Focus on the main Window'''
         def recursiveSetChildFocusPolicy(parentQWidget):
             for childQWidget in parentQWidget.findChildren(QtWidgets.QWidget):
                 childQWidget.setFocusPolicy(policy)
