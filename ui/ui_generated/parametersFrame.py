@@ -34,6 +34,7 @@ class Ui_Parameters(object):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.btAngle = QtWidgets.QPushButton(Parameters)
+        self.btAngle.setFocusPolicy(QtCore.Qt.NoFocus)
         self.btAngle.setObjectName("btAngle")
         self.horizontalLayout_2.addWidget(self.btAngle)
         self.lbAngle = QtWidgets.QLabel(Parameters)
