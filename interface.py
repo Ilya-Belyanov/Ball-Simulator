@@ -1,10 +1,14 @@
 from PyQt5 import QtCore, QtWidgets
 
-from mainWindow import Ui_MainWindow
+from painter import PaintBoard
+
+from ui.ui_generated.mainWidow import Ui_MainWindow
+from ui.ui_generated.parametersFrame import Ui_Parameters
+from ui.ui_generated.toolFrame import Ui_Tools
 from adapter import Adapter
 
 
-class MyWindow(QtWidgets.QMainWindow):
+class Interface(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -18,19 +22,44 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.setChildrenFocusPolicy(QtCore.Qt.NoFocus)
 
-        self.ui.frame.setGeometry(QtCore.QRect(25, 25, 750, 750))
-        self.adapter = Adapter(self.ui.frame)
+        self.connectMainFrame()
+        self.adapter = Adapter(self.ui.paintBall)
 
-        self.ui.frameRight.setGeometry(QtCore.QRect(775, 25, 600, 750))
-
-        self.ui.sld.valueChanged.connect(self.setStartSpeed)
-        self.ui.sld.setRange(0, 20)
-        self.ui.sld_grav.valueChanged.connect(self.setGravity)
-        self.ui.sld_loss.valueChanged.connect(self.setLoss)
-        self.ui.btAngle.clicked.connect(self.angleDialog)
+        self.panelParameters = self.ui.uiTools.uiParameters
+        self.panelParameters.slSpeed.valueChanged.connect(self.setStartSpeed)
+        self.panelParameters.slSpeed.setRange(0, 20)
+        self.panelParameters.slGravity.valueChanged.connect(self.setGravity)
+        self.panelParameters.slLoss.valueChanged.connect(self.setLoss)
+        self.panelParameters.btAngle.clicked.connect(self.angleDialog)
 
         self.setTextParameters()
         self.loadStyleSheets()
+
+    def connectMainFrame(self):
+        self.ui.paintBall = PaintBoard(self.ui.centralwidget)
+        self.ui.paintBall.setMinimumSize(QtCore.QSize(800, 800))
+        self.ui.paintBall.setMaximumSize(QtCore.QSize(800, 800))
+        self.ui.paintBall.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.ui.paintBall.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.ui.paintBall.setObjectName("paintBall")
+        self.ui.horizontalLayout.replaceWidget(self.ui.frame, self.ui.paintBall)
+        self.ui.frame.setVisible(False)
+
+        self.ui.tools = QtWidgets.QWidget()
+        self.ui.tools.setObjectName("tools")
+        self.ui.uiTools = Ui_Tools()
+        self.ui.uiTools.setupUi(self.ui.tools)
+        self.ui.horizontalLayout.addWidget(self.ui.tools)
+
+        self.connectToolFrame()
+
+    def connectToolFrame(self):
+        self.ui.uiTools.tabWidget.clear()
+        self.ui.uiTools.parameters = QtWidgets.QWidget()
+        self.ui.uiTools.parameters.setObjectName("tools")
+        self.ui.uiTools.uiParameters = Ui_Parameters()
+        self.ui.uiTools.uiParameters.setupUi(self.ui.uiTools.parameters)
+        self.ui.uiTools.tabWidget.insertTab(0, self.ui.uiTools.parameters, "Tools")
 
     def loadStyleSheets(self):
         style = "static/style.css"
@@ -57,33 +86,20 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setTextParameters()
 
     def setTextParameters(self):
-        self.ui.lb_speed.setText('Start speed = ' + self.adapter.boardStartSpeedStr() + ' pxl/sec')
-        self.ui.lb_grav.setText('Gravity = ' + self.adapter.boardGravityStr() + ' pxl/sec')
-        self.ui.lb_angle.setText('Start angle = ' + self.adapter.boardStartAngleStr() + ' degrees')
-        self.ui.lb_loss.setText('Loss of energy = ' + self.adapter.boardLoseStrProc() + ' %')
-
-    def setTextSpeed(self):
-        self.ui.lb_red.setText('SpeedRed = ' + self.adapter.speedBallStr(0) + ' pxl/sec')
-        self.ui.lb_green.setText(
-            'SpeedGreen = ' + self.adapter.speedBallStr(1) + ' pxl/sec')
-        self.ui.lb_yellow.setText(
-            'SpeedYellow = ' + self.adapter.speedBallStr(2) + ' pxl/sec')
-        self.ui.lb_purple.setText(
-            'SpeedPink = ' + self.adapter.speedBallStr(3) + ' pxl/sec')
+        self.panelParameters.lbSpeed.setText('Start speed = ' + self.adapter.boardStartSpeedStr() + ' pxl/sec')
+        self.panelParameters.lbGravity.setText('Gravity = ' + self.adapter.boardGravityStr() + ' pxl/sec')
+        self.panelParameters.lbAngle.setText('Start angle = ' + self.adapter.boardStartAngleStr() + ' degrees')
+        self.panelParameters.lbLoss.setText('Loss of energy = ' + self.adapter.boardLoseStrProc() + ' %')
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():
-            self.ui.frame.board.moveBall()
+            self.ui.paintBall.board.moveBall()
             self.update()
-
-        if event.timerId() == self.timerInfo.timerId():
-            if self.ui.frame.board.existBall:
-                self.setTextSpeed()
 
     def keyPressEvent(self, event):
         key = event.key()
         if key == QtCore.Qt.Key_Space:
-            self.ui.frame.board.createBall()
+            self.ui.paintBall.board.createBall()
             self.update()
 
     def setChildrenFocusPolicy(self, policy):

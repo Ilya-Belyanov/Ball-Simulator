@@ -54,6 +54,5 @@ class PaintBoard(QtWidgets.QFrame):
         pen = QtGui.QPen(color, thickness, QtCore.Qt.SolidLine)
         qp.setPen(pen)
 
-
 if __name__ == "__main__":
     print('Module for Ball Simutator')

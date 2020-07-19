@@ -1,16 +1,44 @@
 QMainWindow {
   background-color: #31363b; }
 
-	
+QTabWidget{
+  background-color: #31363b;
+}
+
+QTabWidget::pane {
+    border-top: 2px solid #31363b;
+}
+QTabBar::tab {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                stop: 0 #31363b, stop: 0.4 rgb(60,213,200),
+                                stop: 0.5 #31363b, stop: 1.0 rgb(60,213,200));
+    border: 2px solid rgb(119,221,231);
+    border-bottom-color: rgb(119,221,231);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    min-width: 20ex;
+    padding: 2px;
+	color: white;
+	font: bold 9pt;
+}
+
+QTabBar::tab:selected {
+   color:  rgb(119,221,231);
+}
+
+QTabBar::tab:!selected {
+    margin-top: 2px;
+}
+
 QPushButton {
   border-radius: 10px;
   border-style: outset;
   border-width: 2px;
   border-color: rgb(119,221,231);
   color: #eff0f1;
-  font: bold 20px;
+  font: bold 14px;
   font-family:Impact;
-  min-width: 10em;
+  min-width: 8em;
   padding: 6px;
 	 }
 
@@ -51,7 +79,7 @@ QSlider::add-page{
 QLabel {
   qproperty-alignment:AlignCenter;
   color: #eff0f1;
-  font: bold 17px;
+  font: bold 14px;
   font-family:"Lucida Console";
   
    }
@@ -59,27 +87,12 @@ QLabel {
 QInputDialog {
   background-color: #31363b;
  }
-QFrame#frame{
+QFrame#paintBall{
 	border-style: solid; border-width: 4px; border-color: rgb(60,213,200);
 }
-QLabel#lb_green {
-  border-style: solid; border-width: 2px; border-color: rgb(60,213,200);
-  color: rgb(100,250,100);
-} 
-QLabel#lb_red {
-  border-style: solid; border-width: 2px; border-color: rgb(60,213,200);
-  color: rgb(255,0,0);
-} 
-QLabel#lb_yellow {
-  border-style: solid; border-width: 2px; border-color: rgb(60,213,200);
-  color: rgb(242,245,26);
-} 
-QLabel#lb_purple {
-  border-style: solid; border-width: 2px; border-color: rgb(60,213,200);
-  color: rgb(190,0,255);
-} 
   
-QLabel#lb_border {
+QLabel#lbBorderOne, QLabel#lbBorderTwo, QLabel#lbBorderReload {
+  font: bold 17px;
   background-color: rgb(40,45,50);
   border-style: solid; border-width: 2px; border-color: rgb(60,213,200);
   border-radius: 10px;

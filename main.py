@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets
-from interface import MyWindow
+from interface import Interface
 import sys
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    application = MyWindow()
+    application = Interface()
     application.show()
     sys.exit(app.exec())
