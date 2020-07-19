@@ -18,8 +18,8 @@ class Board:
     def createBall(self):
         self.balls = []
         speed = self.startSpeed  # pi/10 мс
-        radius = (10, 30, 30, 30)
-        coords = ((100, 500), (600, 500), (100, 300), (660, 600))
+        radius = (10, 10, 30, 30)
+        coords = ((100, 491), (600, 500), (100, 300), (660, 600))
         colors = ((255, 0, 0, 255), (0, 255, 0, 255), (242, 245, 26, 255), (190, 0, 255, 255))
         f = self.startF
         for i in range(self.countBall):

@@ -6,6 +6,7 @@ class PaintBoard(QtWidgets.QFrame):
     def setBoard(self, board):
         self.board = board
 
+    '''
     def paintEvent(self, event):
         qp = QtGui.QPainter()
         qp.begin(self)
@@ -54,6 +55,6 @@ class PaintBoard(QtWidgets.QFrame):
         pen = QtGui.QPen(color, thickness, QtCore.Qt.SolidLine)
         qp.setPen(pen)
 
-
+    '''
 if __name__ == "__main__":
     print('Module for Ball Simutator')

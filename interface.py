@@ -1,10 +1,10 @@
 from PyQt5 import QtCore, QtWidgets
 
-from mainWindow import Ui_MainWindow
+from ui.ui_generated.mainWidow import Ui_MainWindow
 from adapter import Adapter
 
 
-class MyWindow(QtWidgets.QMainWindow):
+class Interface(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -18,6 +18,7 @@ class MyWindow(QtWidgets.QMainWindow):
 
         self.setChildrenFocusPolicy(QtCore.Qt.NoFocus)
 
+        '''
         self.ui.frame.setGeometry(QtCore.QRect(25, 25, 750, 750))
         self.adapter = Adapter(self.ui.frame)
 
@@ -28,7 +29,7 @@ class MyWindow(QtWidgets.QMainWindow):
         self.ui.sld_grav.valueChanged.connect(self.setGravity)
         self.ui.sld_loss.valueChanged.connect(self.setLoss)
         self.ui.btAngle.clicked.connect(self.angleDialog)
-
+        '''
         self.setTextParameters()
         self.loadStyleSheets()
 
@@ -57,11 +58,14 @@ class MyWindow(QtWidgets.QMainWindow):
         self.setTextParameters()
 
     def setTextParameters(self):
+        pass
+        '''
         self.ui.lb_speed.setText('Start speed = ' + self.adapter.boardStartSpeedStr() + ' pxl/sec')
         self.ui.lb_grav.setText('Gravity = ' + self.adapter.boardGravityStr() + ' pxl/sec')
         self.ui.lb_angle.setText('Start angle = ' + self.adapter.boardStartAngleStr() + ' degrees')
         self.ui.lb_loss.setText('Loss of energy = ' + self.adapter.boardLoseStrProc() + ' %')
-
+        '''
+    '''
     def setTextSpeed(self):
         self.ui.lb_red.setText('SpeedRed = ' + self.adapter.speedBallStr(0) + ' pxl/sec')
         self.ui.lb_green.setText(
@@ -85,7 +89,7 @@ class MyWindow(QtWidgets.QMainWindow):
         if key == QtCore.Qt.Key_Space:
             self.ui.frame.board.createBall()
             self.update()
-
+    '''
     def setChildrenFocusPolicy(self, policy):
         def recursiveSetChildFocusPolicy(parentQWidget):
             for childQWidget in parentQWidget.findChildren(QtWidgets.QWidget):
