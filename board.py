@@ -1,6 +1,6 @@
 import math
 
-from ballClass import Ball
+from objects import Ball
 
 
 class Board:

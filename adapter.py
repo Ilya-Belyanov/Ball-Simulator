@@ -23,7 +23,7 @@ class Adapter:
             pass
 
     def speedBallStr(self, number):
-        return str(int(self.board.balls[number].speedBall() * 100))
+        return str(int(self.board.balls[number].speed() * 100))
 
     def boardLoseStrProc(self):
         return str(int(self.board.loss * 100))
