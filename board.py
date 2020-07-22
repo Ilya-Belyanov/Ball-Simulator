@@ -1,6 +1,6 @@
 import math
 
-from objects import Ball
+from physicalObjects import Ball
 
 
 class Board:
@@ -27,7 +27,7 @@ class Board:
             x = coords[i][0]
             y = coords[i][1]
             color = colors[i]
-            ball = Ball(x, y, f, R, speed, color)
+            ball = Ball(x, y, R, f, speed, color)
             self.balls.append(ball)
 
         self.existBall = True

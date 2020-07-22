@@ -5,7 +5,7 @@ from vector import Vector
 from reflector import Reflector
 
 
-class Object(ABC):
+class PhysicalObject(ABC):
     def __init__(self, f, speed, color):
         self.f = f
         self.color = color
@@ -53,8 +53,8 @@ class Object(ABC):
         pass
 
 
-class Ball(Object):
-    def __init__(self, X, Y, f, R, speed, color):
+class Ball(PhysicalObject):
+    def __init__(self, X, Y, R, f, speed, color):
         super().__init__(f, speed, color)
         self.coords = [X, Y]
         self.radius = R
