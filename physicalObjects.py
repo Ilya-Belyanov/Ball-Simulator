@@ -9,7 +9,6 @@ class PhysicalObject(ABC):
     def __init__(self, f, speed, color):
         self.f = f
         self.color = color
-        self.active = True
         self.vector = Vector()
         self.vector.createVector(self.f, speed)
 
@@ -41,9 +40,6 @@ class PhysicalObject(ABC):
     def checkMin(self):
         if self.speed() < 0.002:
             self.vector.clear()
-            self.active = False
-        else:
-            self.active = True
 
     def speed(self):
         return float('{:.2f}'.format(self.vector.length()))

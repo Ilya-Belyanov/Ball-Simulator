@@ -15,9 +15,9 @@ class Ui_MainWindow(object):
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
-        
+
         self.createFrameRight()
-        
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setObjectName("menubar")
@@ -28,7 +28,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-    
+
     def createFrameRight(self):
         self.frameRight = QtWidgets.QFrame(self.centralwidget)
 
@@ -91,12 +91,11 @@ class Ui_MainWindow(object):
         self.vbox.addLayout(self.hbox_grav)
         self.vbox.addLayout(self.hbox_loss)
         self.vbox.addWidget(self.lb_reload)
-        
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Ball Simulation"))
 
 
-
 if __name__ == "__main__":
-    print('Module for Ball Simutator')
+    print('Module for Ball Simulator')

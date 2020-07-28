@@ -1,10 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
 
-from painter import PaintBoard
-
 from ui.ui_generated.mainWidow import Ui_MainWindow
 from ui.ui_generated.parametersFrame import Ui_Parameters
 from ui.ui_generated.toolFrame import Ui_Tools
+from painter import PaintBoard
 from adapter import Adapter
 
 
@@ -93,13 +92,13 @@ class Interface(QtWidgets.QMainWindow):
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():
-            self.ui.paintBall.board.moveBall()
+            self.adapter.board.moveBall()
             self.update()
 
     def keyPressEvent(self, event):
         key = event.key()
         if key == QtCore.Qt.Key_Space:
-            self.ui.paintBall.board.createBall()
+            self.adapter.board.createBall()
             self.update()
 
     def setChildrenFocusPolicy(self, policy):

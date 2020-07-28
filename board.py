@@ -7,8 +7,7 @@ class Board:
 
     def __init__(self, size):
         self.size = size
-        self.existBall = False
-        self.countBall = 4
+        self.countBall = 5
         self.gravity = 0
         self.loss = float('{:.2f}'.format(0))
         self.startF = 0
@@ -18,9 +17,9 @@ class Board:
     def createBall(self):
         self.balls = []
         speed = self.startSpeed  # pi/10 мс
-        radius = (10, 10, 30, 30)
-        coords = ((100, 491), (600, 500), (100, 300), (660, 600))
-        colors = ((255, 0, 0, 255), (0, 255, 0, 255), (242, 245, 26, 255), (190, 0, 255, 255))
+        radius = (10, 10, 30, 30, 10)
+        coords = [[i, i] for i in range(20, 800, 100)]
+        colors = ((255, 0, 0, 255), (0, 255, 0, 255), (242, 245, 26, 255), (190, 0, 255, 255), (255, 255, 255, 255))
         f = self.startF
         for i in range(self.countBall):
             R = radius[i]
@@ -30,25 +29,28 @@ class Board:
             ball = Ball(x, y, R, f, speed, color)
             self.balls.append(ball)
 
-        self.existBall = True
-
     def moveBall(self):
-        if self.existBall:
-            for ball in self.balls:
-                ball.move()
-                self.checkWallCollision(ball)
-                self.checkBallsCollision(ball)
-                ball.updateTrack()
-                ball.gravity(self.gravity)
+        for ball in self.balls:
+            self.checkCollision(ball)
+            ball.move()
+            self.checkCollision(ball)
+            ball.updateTrack()
+            ball.gravity(self.gravity)
+
+    def checkCollision(self, ball):
+        self.checkWallCollision(ball)
+        self.checkBallsCollision(ball)
 
     def checkWallCollision(self, ball):
         if ball.coords[1] > self.size().height() - ball.radius or ball.coords[1] < ball.radius:
             ball.back()
             ball.reflectionWall(0, self.loss)
+            ball.move()
 
-        if ball.coords[0] < ball.radius or ball.coords[0] > self.size().width() - ball.radius:
+        elif ball.coords[0] < ball.radius or ball.coords[0] > self.size().width() - ball.radius:
             ball.back()
             ball.reflectionWall(90, self.loss)
+            ball.move()
 
     def checkBallsCollision(self, ball):
         for b in self.balls:
