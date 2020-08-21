@@ -92,13 +92,13 @@ class Interface(QtWidgets.QMainWindow):
 
     def timerEvent(self, event):
         if event.timerId() == self.timerMove.timerId():
-            self.adapter.board.moveBall()
+            self.adapter.moveBall()
             self.update()
 
     def keyPressEvent(self, event):
         key = event.key()
         if key == QtCore.Qt.Key_Space:
-            self.adapter.board.createBall()
+            self.adapter.setStartBoard()
             self.update()
 
     def setChildrenFocusPolicy(self, policy):
